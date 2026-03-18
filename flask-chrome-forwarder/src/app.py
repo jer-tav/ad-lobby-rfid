@@ -30,9 +30,9 @@ def lobby():
         return "Could not retrieve URL from Chrome.", 503
     
     if re.match(URL_PATTERN, current_url):
-        return {"url": current_url, "matched": True}, 200
+        return current_url, 200
     
-    return {"url": current_url, "matched": False}, 200
+    return "Current URL does not match the specified pattern.", 404
 
 if __name__ == '__main__':
     app.run(port=REMOTE_DEBUGGING_PORT)

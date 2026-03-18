@@ -1,0 +1,14 @@
+[Unit]
+Description=Flask Chrome Forwarder
+After=network.target
+
+[Service]
+Type=simple
+User=%u
+WorkingDirectory=%h/ad-lobby-rfid
+ExecStart=%h/ad-lobby-rfid/.venv/bin/python %h/ad-lobby-rfid/flask-chrome-forwarder/src/app.py
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=default.target

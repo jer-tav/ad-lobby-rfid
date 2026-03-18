@@ -8,7 +8,6 @@ This project is a Flask web server that monitors a Chrome instance using the rem
 flask-chrome-forwarder
 ├── src
 │   ├── app.py
-│   ├── chrome_debugger.py
 │   ├── config.py
 │   └── requirements.txt
 ├── README.md
@@ -16,6 +15,30 @@ flask-chrome-forwarder
 ```
 
 ## Installation
+
+### Quick Install (Ubuntu/Debian)
+
+Run this single command to install everything:
+
+```bash
+bash <(curl -sSL https://raw.githubusercontent.com/yourusername/ad-lobby-rfid/main/install.sh)
+```
+
+Or, if you have the repository cloned locally:
+
+```bash
+bash install.sh
+```
+
+**To install and set up as a systemd service:**
+
+```bash
+bash install.sh service
+```
+
+This will automatically create and enable a systemd user service that starts on boot.
+
+### Manual Installation
 
 1. Clone the repository:
    ```bash
@@ -25,25 +48,28 @@ flask-chrome-forwarder
 
 2. Create a virtual environment (optional but recommended):
    ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+   python3 -m venv .venv
+   source .venv/bin/activate
    ```
 
 3. Install the required dependencies:
    ```bash
-   pip install -r requirements.txt
+   pip install -r flask-chrome-forwarder/requirements.txt
    ```
 
 ## Usage
+
+### Running Directly
 
 1. Start Chrome with remote debugging enabled:
    ```bash
    google-chrome --remote-debugging-port=9222
    ```
 
-2. Start the Flask application:
+2. Activate the virtual environment and start the Flask application:
    ```bash
-   python src/app.py
+   source .venv/bin/activate
+   python flask-chrome-forwarder/src/app.py
    ```
 
 3. Access the `/lobby` endpoint:
@@ -51,7 +77,32 @@ flask-chrome-forwarder
    curl http://localhost:5000/lobby
    ```
 
-   The endpoint will return the current Chrome URL if it matches the pattern defined in `config.py`.
+### Running as a System Service (systemd)
+
+If you installed with the `service` flag, the service is already set up and enabled. Otherwise, you can install it anytime by running:
+
+```bash
+bash install.sh service
+```
+
+**Managing the service:**
+
+```bash
+# Start the service
+systemctl --user start flask-chrome-forwarder
+
+# Check the status
+systemctl --user status flask-chrome-forwarder
+
+# View logs
+journalctl --user -u flask-chrome-forwarder -f
+
+# Stop the service
+systemctl --user stop flask-chrome-forwarder
+
+# Disable auto-start (but keep it available)
+systemctl --user disable flask-chrome-forwarder
+```
 
 ## Configuration
 
