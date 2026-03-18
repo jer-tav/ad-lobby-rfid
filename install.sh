@@ -14,6 +14,10 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
+# Get the directory where script is located or current directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}"))" 2>/dev/null && pwd || pwd)"
+cd "$SCRIPT_DIR"
+
 # Check if running on Ubuntu/Debian
 if ! command -v apt-get &> /dev/null; then
     echo -e "${RED}Error: This script requires apt-get (Ubuntu/Debian)${NC}"
@@ -33,7 +37,6 @@ echo -e "${YELLOW}Step 2: Installing Python and dependencies...${NC}"
 sudo apt-get install -y -qq python3 python3-venv python3-pip
 
 echo -e "${YELLOW}Step 3: Creating Python virtual environment...${NC}"
-cd "$(dirname "$0")"
 python3 -m venv .venv
 
 echo -e "${YELLOW}Step 4: Activating virtual environment and installing requirements...${NC}"
@@ -44,8 +47,7 @@ pip install -q -r flask-chrome-forwarder/requirements.txt
 install_systemd_service() {
     echo -e "${YELLOW}Step 5: Setting up systemd service...${NC}"
     
-    # Get absolute paths
-    SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+    # Use the SCRIPT_DIR already set at the top
     VENV_PYTHON="$SCRIPT_DIR/.venv/bin/python"
     APP_SCRIPT="$SCRIPT_DIR/flask-chrome-forwarder/src/app.py"
     SERVICE_DIR="$HOME/.config/systemd/user"
