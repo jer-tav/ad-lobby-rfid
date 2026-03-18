@@ -21,7 +21,7 @@ flask-chrome-forwarder
 Run this single command to install everything:
 
 ```bash
-bash <(curl -sSL https://raw.githubusercontent.com/yourusername/ad-lobby-rfid/main/install.sh)
+bash <(curl -sSL https://raw.githubusercontent.com/jer-tav/ad-lobby-rfid/main/install.sh)
 ```
 
 Or, if you have the repository cloned locally:
@@ -42,7 +42,7 @@ This will automatically create and enable a systemd user service that starts on 
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/flask-chrome-forwarder.git
+   git clone https://github.com/jer-tav/flask-chrome-forwarder.git
    cd flask-chrome-forwarder
    ```
 
