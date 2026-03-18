@@ -14,9 +14,33 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-# Get the directory where script is located or current directory
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}"))" 2>/dev/null && pwd || pwd)"
-cd "$SCRIPT_DIR"
+# Determine the installation directory
+# If piped from curl, we need to use a proper location
+INSTALL_DIR="${1:.}"
+if [[ "$1" == "service" ]] || [[ "$1" == "" ]]; then
+    INSTALL_DIR="."
+fi
+
+# Get absolute path
+INSTALL_DIR="$(cd "$INSTALL_DIR" 2>/dev/null && pwd)" || {
+    echo -e "${RED}Error: Installation directory not found${NC}"
+    exit 1
+}
+
+# Check if requirements file exists
+if [[ ! -f "$INSTALL_DIR/flask-chrome-forwarder/requirements.txt" ]]; then
+    echo -e "${RED}Error: flask-chrome-forwarder/requirements.txt not found${NC}"
+    echo ""
+    echo "This script should be run from the project root directory."
+    echo ""
+    echo "To install from GitHub:"
+    echo "  git clone https://github.com/yourusername/ad-lobby-rfid.git"
+    echo "  cd ad-lobby-rfid"
+    echo "  bash install.sh"
+    exit 1
+fi
+
+cd "$INSTALL_DIR"
 
 # Check if running on Ubuntu/Debian
 if ! command -v apt-get &> /dev/null; then
@@ -47,9 +71,9 @@ pip install -q -r flask-chrome-forwarder/requirements.txt
 install_systemd_service() {
     echo -e "${YELLOW}Step 5: Setting up systemd service...${NC}"
     
-    # Use the SCRIPT_DIR already set at the top
-    VENV_PYTHON="$SCRIPT_DIR/.venv/bin/python"
-    APP_SCRIPT="$SCRIPT_DIR/flask-chrome-forwarder/src/app.py"
+    # Use the INSTALL_DIR already set at the top
+    VENV_PYTHON="$INSTALL_DIR/.venv/bin/python"
+    APP_SCRIPT="$INSTALL_DIR/flask-chrome-forwarder/src/app.py"
     SERVICE_DIR="$HOME/.config/systemd/user"
     SERVICE_FILE="$SERVICE_DIR/flask-chrome-forwarder.service"
     
@@ -64,7 +88,7 @@ After=network.target
 
 [Service]
 Type=simple
-WorkingDirectory=$SCRIPT_DIR
+WorkingDirectory=$INSTALL_DIR
 ExecStart=$VENV_PYTHON $APP_SCRIPT
 Restart=on-failure
 RestartSec=10
