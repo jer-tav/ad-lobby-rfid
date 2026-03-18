@@ -14,13 +14,6 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-# Determine the installation directory
-# If piped from curl, we need to use a proper location
-INSTALL_DIR="${1:.}"
-if [[ "$1" == "service" ]] || [[ "$1" == "" ]]; then
-    INSTALL_DIR="."
-fi
-
 # Get absolute path
 INSTALL_DIR="$(cd "$INSTALL_DIR" 2>/dev/null && pwd)" || {
     echo -e "${RED}Error: Installation directory not found${NC}"

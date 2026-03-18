@@ -17,14 +17,7 @@ flask-chrome-forwarder
 ## Installation
 
 ### Quick Install (Ubuntu/Debian)
-
-Run this single command to install everything:
-
-```bash
-bash <(curl -sSL https://raw.githubusercontent.com/jer-tav/ad-lobby-rfid/main/install.sh)
-```
-
-Or, if you have the repository cloned locally:
+Clone the repository and run:
 
 ```bash
 bash install.sh
